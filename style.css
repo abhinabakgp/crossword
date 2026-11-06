@@ -1,0 +1,535 @@
+:root {
+  --navy: #17263d;
+  --ink: #263449;
+  --muted: #7a8798;
+  --paper: #f4f6f8;
+  --panel: #ffffff;
+  --line: #e3e8ee;
+  --teal: #159b8d;
+  --teal-dark: #0d7c72;
+  --teal-soft: #e7f6f2;
+  --red: #c94e5b;
+  --cell-size: 36px;
+}
+
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; min-width: 320px; margin: 0; }
+body {
+  overflow: hidden;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+button { font: inherit; }
+button:focus-visible { outline: 3px solid rgba(21, 155, 141, .42); outline-offset: 2px; }
+
+.app-shell {
+  width: min(1280px, calc(100% - 32px));
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.topbar {
+  flex: 0 0 42px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  color: var(--navy);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -.045em;
+}
+.app-main { flex: 1; min-height: 0; overflow: hidden; }
+.screen { display: none; width: 100%; height: 100%; min-height: 0; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* Home: app name, level heading and level buttons only. */
+.home-screen { overflow-y: auto; padding: 24px 2px; }
+.home-heading { margin-bottom: 16px; }
+.home-heading h1 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: -.05em;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 230px));
+  gap: 12px;
+  align-content: start;
+}
+.level-card {
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  /* border-radius: 10px; */
+  text-align: left;
+  color: var(--ink);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.level-card:hover:not(:disabled) { border-color: #82cfc3; background: #fbfefd; }
+.level-card:disabled { opacity: .5; cursor: not-allowed; }
+.level-number {
+  color: var(--teal-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+.level-title { color: var(--navy); font-size: 18px; font-weight: 750; }
+.level-meta, .level-best { color: var(--muted); font-size: 11px; }
+.level-best { margin-top: auto; }
+.level-card.completed { border-color: #a5dcd3; }
+
+/* Game view: fixed viewport. Only the clue lists have vertical scrolling. */
+.game-screen { overflow: hidden; }
+.game-top {
+  flex: 0 0 48px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.back-btn {
+  justify-self: start;
+  padding: 8px 0;
+  border: 0;
+  color: var(--muted);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.back-btn:hover, .quiet-btn:hover { color: var(--teal-dark); }
+.game-heading { min-width: 0; text-align: center; }
+.game-heading .kicker {
+  color: var(--teal-dark);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.game-heading h1 {
+  overflow: hidden;
+  margin: 1px 0 0;
+  color: var(--navy);
+  font-size: 20px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.timer-pill {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  /* border-radius: 8px; */
+  color: var(--navy);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.timer-pill span:first-child { color: var(--teal); }
+.game-layout {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+  gap: 12px;
+  overflow: hidden;
+}
+.panel {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--line);
+  /* border-radius: 8px; */
+  background: var(--panel);
+}
+.board-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  overflow: hidden;
+}
+.panel-topline {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.panel-topline h2, .clue-header h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+}
+.progress-label {
+  color: #8995a5;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.progress-track {
+  flex: 0 0 4px;
+  height: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  /* border-radius: 20px; */
+  background: #edf1f4;
+}
+.progress-fill {
+  width: 0;
+  height: 100%;
+  /* border-radius: 20px; */
+  background: var(--teal);
+  transition: width .2s;
+}
+.grid-scroll {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.crossword-grid {
+  display: grid;
+  gap: 0;
+  width: max-content;
+  flex: 0 0 auto;
+  margin: auto;
+  border-top: 1px solid #8794a2;
+  border-left: 1px solid #8794a2;
+  background: #aeb9c5;
+}
+.cell, .block {
+  position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #8794a2;
+  border-bottom: 1px solid #8794a2;
+  /* border-radius: 0; */
+}
+.block { background: #10283d; }
+.cell {
+  display: grid;
+  place-items: center;
+  color: var(--navy);
+  background: #fff;
+  cursor: pointer;
+}
+.cell:hover { background: #f0faf7; }
+.cell.highlighted { background: #eaf7f4; }
+.cell.selected {
+  z-index: 1;
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+  background: #d4f0e9;
+}
+.cell.wrong { color: #b53e4a; background: #fff0f1; }
+.cell-number {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  color: #667386;
+  font-size: clamp(6px, calc(var(--cell-size) * .19), 9px);
+  line-height: 1;
+  font-weight: 650;
+}
+.cell-letter {
+  position: relative;
+  font-size: calc(var(--cell-size) * .55);
+  line-height: 1;
+  font-weight: 850;
+}
+.cell.revealed .cell-letter::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: -5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d99b2b;
+}
+.board-foot {
+  flex: 0 0 auto;
+  margin-top: 7px;
+  color: #8c98a8;
+  font-size: 10px;
+}
+.board-foot strong { color: #5e6d81; }
+
+.clue-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  overflow: hidden;
+}
+.clue-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.clue-header span {
+  color: #8b97a7;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.active-clue {
+  flex: 0 0 auto;
+  margin: 8px 0;
+  padding: 9px 10px;
+  border: 1px solid #d9eee9;
+  /* border-radius: 6px; */
+  background: #f1faf7;
+}
+.active-clue small {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--teal-dark);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.active-clue p {
+  margin: 0;
+  color: #263b51;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.clue-columns {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.clue-group {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.clue-group h3 {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 4px 5px 7px;
+  color: #8995a5;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.clue-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 6px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #bdc9d2 transparent;
+  overscroll-behavior: contain;
+}
+.clue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 6px;
+  border: 0;
+  /* border-radius: 4px; */
+  text-align: left;
+  color: #637187;
+  background: transparent;
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+}
+.clue-item:hover { background: #f4f7f9; }
+.clue-item.active { color: #126f68; background: #e7f6f2; }
+.clue-num {
+  flex: 0 0 18px;
+  color: #98a4b2;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+.clue-item.active .clue-num { color: var(--teal-dark); }
+.tools {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.tool-btn, .primary-btn, .secondary-btn, .quiet-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  /* border-radius: 6px; */
+  font-weight: 750;
+  cursor: pointer;
+}
+.tool-btn {
+  min-height: 32px;
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  color: #5e6d81;
+  background: #fff;
+  font-size: 9px;
+}
+.tool-btn:hover { border-color: #a9dcd4; color: var(--teal-dark); }
+.tool-btn.primary-tool { border-color: #d4eee8; color: #087c71; background: #eaf8f5; }
+.tool-btn.danger-tool:hover { border-color: #efc5ca; color: var(--red); }
+.message-line {
+  flex: 0 0 auto;
+  min-height: 16px;
+  margin: 5px 0 0;
+  color: #8995a6;
+  font-size: 9px;
+  line-height: 1.3;
+}
+.message-line.success { color: #078575; font-weight: 800; }
+.message-line.error { color: var(--red); font-weight: 750; }
+.game-bottom {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  color: #8995a5;
+  font-size: 9px;
+}
+.quiet-btn { padding: 4px 0; color: #8290a1; background: transparent; font-size: 9px; }
+
+/* Completion dialog */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: none;
+  place-items: center;
+  padding: 16px;
+  background: rgba(15, 28, 45, .55);
+}
+.modal-backdrop.show { display: grid; }
+.modal {
+  width: min(380px, 100%);
+  padding: 26px;
+  /* border-radius: 12px; */
+  text-align: center;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+}
+.trophy {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  /* border-radius: 12px; */
+  color: #a36b09;
+  background: #fff3d7;
+  font-size: 24px;
+}
+.modal h2 { margin: 0; color: var(--navy); font-size: 24px; }
+.modal p { margin: 8px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.primary-btn, .secondary-btn { width: 100%; min-height: 40px; font-size: 12px; }
+.primary-btn { color: #10313b; background: #77ddcb; }
+.secondary-btn { margin-top: 8px; border: 1px solid var(--line); color: #69778d; background: #fff; }
+.device-input {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: .01;
+  font-size: 16px;
+  z-index: -1;
+}
+
+@media (max-width: 760px) {
+  .app-shell { width: calc(100% - 20px); padding: 8px 0; }
+  .topbar { flex-basis: 36px; }
+  .brand { font-size: 18px; }
+  .game-top { flex-basis: 44px; margin-bottom: 7px; }
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1.2fr) minmax(0, .8fr);
+    gap: 7px;
+  }
+  .board-panel { padding: 8px; }
+  .panel-topline { margin-bottom: 6px; }
+  .progress-track { margin-bottom: 4px; }
+  .board-foot { margin-top: 4px; }
+  .clue-panel { padding: 8px; }
+  .clue-header { padding-bottom: 5px; }
+  .active-clue { margin: 5px 0; padding: 6px 8px; }
+  .active-clue p { font-size: 10px; }
+  .clue-columns { gap: 6px; }
+  .clue-group h3 { padding: 3px 2px 4px; }
+  .clue-item { padding: 4px 3px; font-size: 9px; }
+  .tools { gap: 4px; margin-top: 5px; padding-top: 5px; }
+  .tool-btn { min-height: 27px; font-size: 8px; }
+  .message-line { min-height: 13px; margin-top: 3px; font-size: 8px; }
+  .game-bottom { flex-basis: 20px; font-size: 8px; }
+  .quiet-btn { font-size: 8px; }
+}
+
+@media (max-width: 380px) {
+  .app-shell { width: calc(100% - 12px); }
+  .game-top { grid-template-columns: .9fr 1.5fr .9fr; gap: 4px; }
+  .back-btn { font-size: 10px; }
+  .game-heading h1 { font-size: 17px; }
+  .timer-pill { padding: 7px 6px; font-size: 10px; }
+  .clue-item { font-size: 8px; }
+  .clue-num { flex-basis: 15px; }
+}
+
+@media (max-height: 620px) and (min-width: 761px) {
+  .app-shell { padding-top: 6px; padding-bottom: 6px; }
+  .topbar { flex-basis: 32px; }
+  .game-top { flex-basis: 38px; margin-bottom: 5px; }
+  .board-panel, .clue-panel { padding: 7px; }
+  .active-clue { margin: 5px 0; padding: 6px; }
+  .tools { margin-top: 5px; padding-top: 5px; }
+  .tool-btn { min-height: 27px; }
+  .game-bottom { flex-basis: 19px; }
+}

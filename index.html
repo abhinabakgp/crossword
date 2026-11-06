@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f4f6f8" />
+  <title>Crossword Studio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <input
+    id="deviceInput"
+    class="device-input"
+    type="text"
+    inputmode="text"
+    autocomplete="off"
+    autocapitalize="characters"
+    spellcheck="false"
+    aria-label="Type crossword letters with your device keyboard"
+  />
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">Crossword Studio</div>
+    </header>
+
+    <main class="app-main">
+      <section id="homeScreen" class="screen home-screen active">
+        <div class="home-heading">
+          <h1>Choose a level</h1>
+        </div>
+        <div class="level-grid" id="levelGrid"></div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen">
+        <div class="game-top">
+          <button class="back-btn" id="backBtn" type="button">← Levels</button>
+          <div class="game-heading">
+            <div class="kicker" id="gameLevelLabel">Level 01</div>
+            <h1 id="gameTitle">Crossword</h1>
+          </div>
+          <div class="timer-pill"><span aria-hidden="true">◷</span><span id="timer">00:00</span></div>
+        </div>
+
+        <div class="game-layout">
+          <section class="panel board-panel" aria-label="Crossword board">
+            <div class="panel-topline">
+              <h2>Crossword grid</h2>
+              <span class="progress-label" id="fillLabel">0% filled</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="grid-scroll"><div id="crosswordGrid" class="crossword-grid" aria-label="Crossword puzzle"></div></div>
+            <div class="board-foot">Selected: <strong id="directionLabel">Across</strong></div>
+          </section>
+
+          <aside class="panel clue-panel" aria-label="Crossword clues">
+            <div class="clue-header">
+              <h2>Clues</h2>
+              <span id="clueCount">0 words</span>
+            </div>
+            <div class="active-clue" aria-live="polite">
+              <small id="activeClueLabel">Across · 1</small>
+              <p id="activeClueText">Select a square to begin.</p>
+            </div>
+            <div class="clue-columns">
+              <div class="clue-group">
+                <h3>Across</h3>
+                <div id="acrossClues" class="clue-list"></div>
+              </div>
+              <div class="clue-group">
+                <h3>Down</h3>
+                <div id="downClues" class="clue-list"></div>
+              </div>
+            </div>
+            <div class="tools">
+              <button class="tool-btn primary-tool" id="checkWordBtn" type="button">Check word</button>
+              <button class="tool-btn" id="revealLetterBtn" type="button">Reveal Letter</button>
+              <button class="tool-btn" id="revealWordBtn" type="button">Reveal Word</button>
+              <button class="tool-btn danger-tool" id="clearBtn" type="button">Clear level</button>
+            </div>
+            <p id="messageLine" class="message-line" aria-live="polite">Choose a square to see its clue.</p>
+          </aside>
+        </div>
+
+        <div class="game-bottom">
+          <span>Tap a crossing square again to switch direction.</span>
+          <button class="quiet-btn" id="restartBtn" type="button">Restart timer</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="completeModal" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+    <div class="modal">
+      <div class="trophy">★</div>
+      <h2 id="completeTitle">Puzzle complete!</h2>
+      <p id="completeText">Every word is correct. Nicely done.</p>
+      <button class="primary-btn" id="nextLevelBtn" type="button">Next level →</button>
+      <button class="secondary-btn" id="modalHomeBtn" type="button">Back to levels</button>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
